@@ -1,0 +1,42 @@
+---
+title: "K-Means"
+output:
+  html_document:
+    df_print: paged
+---
+19523118-19523180
+
+
+```{r}
+myData <- read.csv(file="Wholesale customers data.csv", header = TRUE)
+summary(myData)
+```
+```{r}
+myData.new <- myData[, 5:8]
+myData.class <- myData[, "Channel"]
+set.seed(1356)
+result <- kmeans(myData.new, 3) 
+```
+
+```{r}
+par(mfrow=c(2,2), mar=c(5,4,2,2))
+plot(myData.new[, c(1,2)], col=result$cluster)
+plot(myData.new[, c(1,2)], col=myData.class)
+plot(myData.new[, c(3,4)], col=result$cluster)
+plot(myData.new[, c(3,4)], col=myData.class)
+```
+
+```{r}
+result$tot.withinss
+```
+```{r}
+myData.new$cluster <- factor(result$cluster)
+centers <- as.data.frame(result$centers)
+library(ggplot2)
+ggplot() + 
+  geom_point(data=myData.new, aes(x=Grocery, y=Frozen,color=cluster))  +
+  geom_point(data=centers, aes(x=Grocery, y=Frozen, color="center"), 
+             size=52, alpha=.3, show.legend = FALSE)
+
+```
+
